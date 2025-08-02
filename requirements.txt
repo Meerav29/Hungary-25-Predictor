@@ -1,1 +1,9 @@
-# Add project dependencies here
+# Project dependencies
+fastf1
+pandas
+numpy
+scikit-learn
+matplotlib
+seaborn
+jupyter
+requests
