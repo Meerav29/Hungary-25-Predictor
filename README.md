@@ -1,6 +1,7 @@
 # F1 Hungary Winner Predictor
 
 Predict the winner of the 2025 Hungarian Grand Prix using historical Formula 1 data, weather information, simulation, and machine learning.
+<img width="2879" height="1564" alt="image" src="https://github.com/user-attachments/assets/3429b689-f4ea-4777-81e4-157c16cf3d06" />
 
 ## Project Goals
 - Collect and analyze past F1 race data (Hungarian GP + 2025 season)
@@ -9,11 +10,11 @@ Predict the winner of the 2025 Hungarian Grand Prix using historical Formula 1 d
 - Visualize and document the results
 
 ## Roadmap
-- [ ] Data collection pipeline
+- [x] Data collection pipeline
 - [ ] Feature engineering and EDA
-- [ ] Model development
-- [ ] Simulation engine
-- [ ] Visualization and reporting
+- [x] Model development
+- [x] Simulation engine
+- [x] Visualization and reporting
 - [ ] Documentation
 
 ## Requirements
