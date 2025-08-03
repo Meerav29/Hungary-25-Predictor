@@ -11,7 +11,7 @@ Predict the winner of the 2025 Hungarian Grand Prix using historical Formula 1 d
 
 ## Roadmap
 - [x] Data collection pipeline
-- [ ] Feature engineering and EDA
+- [x] Feature engineering and EDA
 - [x] Model development
 - [x] Simulation engine
 - [x] Visualization and reporting
@@ -20,9 +20,5 @@ Predict the winner of the 2025 Hungarian Grand Prix using historical Formula 1 d
 ## Requirements
 See `requirements.txt`
 
-## Usage
-*To be added soon*
-
 ## Credits
 - [FastF1](https://theoehrly.github.io/Fast-F1/)
-- Weather APIs
