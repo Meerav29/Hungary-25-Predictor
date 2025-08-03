@@ -23,3 +23,19 @@ models/*
 # IDE settings
 .vscode/
 .idea/
+
+
+Thumbs.db
+ehthumbs.db
+
+# Python egg and cache files
+*.egg-info/
+dist/
+build/
+
+# Jupyter Notebook outputs (optional)
+*.nbconvert.ipynb
+    
+# pytest (optional)
+.pytest_cache/
+.coverage
