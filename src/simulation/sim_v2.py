@@ -1,9 +1,11 @@
 import fastf1
 import pandas as pd
 import numpy as np
+import matplotlib.pyplot as plt
+
 
 YEAR = 2025
-N_SIMULATIONS = 10000
+N_SIMULATIONS = 1000
 
 def get_latest_race_round():
     schedule = fastf1.get_event_schedule(YEAR)
@@ -49,7 +51,40 @@ def get_latest_hungary_quali(year):
     quali = session.results[['Abbreviation', 'Position']].copy()
     quali['Position'] = quali['Position'].astype(int)
     quali = quali.sort_values('Position').reset_index(drop=True)
+        # 1. Create Grid Score: 1 for pole, then linearly decreasing
+    max_pos = quali['Position'].max()
+    quali['GridScore'] = 1 - (quali['Position'] - 1) / (max_pos - 1)
+
+    # 2. Merge with driver performance
+    sim_df = quali.merge(driver_perf[['Abbreviation', 'NormScore']], on='Abbreviation', how='left')
+    sim_df['NormScore'] = sim_df['NormScore'].fillna(sim_df['NormScore'].min())
+
+    # 3. Blend: Tune weights as you like (here: 0.7 perf, 0.3 grid)
+    perf_wt = 0.7
+    grid_wt = 0.3
+    sim_df['FinalScore'] = perf_wt * sim_df['NormScore'] + grid_wt * sim_df['GridScore']
+    sim_df['WinProb'] = sim_df['FinalScore'] / sim_df['FinalScore'].sum()
+    sim_df['SimWins'] = 0
+
+    # 4. Run simulation as before
+    for _ in range(N_SIMULATIONS):
+        # Simulate possible DNFs: 2% DNF chance for each driver
+        probs = sim_df['WinProb'].copy()
+        dnf = np.random.rand(len(probs)) < 0.02  # 2% chance DNF
+        probs[dnf] = 0
+        # If all DNF, skip this sim
+        if probs.sum() == 0:
+            continue
+        probs = probs / probs.sum()
+        winner = np.random.choice(sim_df['Abbreviation'], p=probs)
+        sim_df.loc[sim_df['Abbreviation'] == winner, 'SimWins'] += 1
+
+    sim_df['SimWinPct'] = sim_df['SimWins'] / N_SIMULATIONS * 100
+    print(sim_df[['Abbreviation', 'Position', 'SimWinPct']].sort_values('SimWinPct', ascending=False))
+
     return quali
+
+
 
 def run_simulation(quali, driver_perf, n_sim=N_SIMULATIONS):
     # Merge driver performance score with quali
@@ -83,3 +118,10 @@ if __name__ == "__main__":
     sim_results = run_simulation(quali, driver_perf)
     print("\nHungarian GP 2025 Win Probabilities (Performance-Based):")
     print(sim_results[['Abbreviation', 'Position', 'SimWinPct']])
+
+
+plt.figure(figsize=(10, 5))
+plt.bar(sim_results['Abbreviation'], sim_results['SimWinPct'])
+plt.ylabel("Win Probability (%)")
+plt.title("Hungarian GP 2025 – Simulated Win Odds (Blended/Chaos)")
+plt.show()
